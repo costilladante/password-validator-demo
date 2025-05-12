@@ -20,10 +20,20 @@ import './App.css'
 function App() {
   const [progress, setProgress] = useState(0)
   const [isValid, setIsValid] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    toast(isValid ? 'Password is valid!' : 'Please fix the password requirements')
+    if (!isValid) {
+      toast('Please fix the password requirements')
+      return
+    }
+    if (password !== confirmPassword) {
+      toast('Passwords do not match')
+      return
+    }
+    toast('Password is valid and matches!')
   }
 
   const customRule = new FunctionRule(
@@ -43,7 +53,7 @@ function App() {
   }
 
   const onValueChange = (value: string) => {
-    console.log('value', value)
+    setPassword(value)
   }
   return (
     <div className="min-h-screen w-full animated-gradient flex items-center justify-center p-4 sm:p-6 md:p-8">
@@ -78,7 +88,11 @@ function App() {
           <div className="space-y-1">
             <Label htmlFor="confirm-password">Confirm Password</Label>
             <div className="relative">
-              <Input id="confirm-password" />
+              <Input
+                id="confirm-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </div>
           </div>
 
